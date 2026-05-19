@@ -1,0 +1,24 @@
+name: Build Timeline
+on:
+  push:
+    branches: [ main, master ]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-packages: 'PyYAML'
+    - name: Run Build Script
+      run: python build.py
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@://github.com"
+        git add index.html
+        git commit -m "Auto-generated index.html" || exit 0
+        git push
